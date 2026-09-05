@@ -27,6 +27,15 @@ jobs:
         run: |
           python -m py_compile app/app.py
 
+      - name: Test health endpoint
+        run: |
+          cd app
+          python app.py &
+          APP_PID=$!
+          sleep 3
+          curl --fail http://127.0.0.1:8080/health
+          kill $APP_PID
+
       - name: Build Docker image
         run: |
           docker build -t devops-gcp-app ./app
